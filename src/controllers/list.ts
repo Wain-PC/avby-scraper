@@ -1,9 +1,12 @@
-import { ListRequest, ListResponse } from '../def/index.js';
+import { Advert, ListRequest, ListResponse } from '../def/index.js';
 import { config } from '../utils/config.js';
 import { firstValueFrom, from, map, switchMap } from 'rxjs';
 import fetch from 'node-fetch';
+import wait from 'wait-promise';
 
 export function makeListRequest(request: ListRequest): Promise<ListResponse> {
+  console.log('Make request for page', request.page);
+
   return firstValueFrom(
     from(
       fetch(`${config.baseURL}/offer-types/cars/filters/main/apply`, {
@@ -24,4 +27,20 @@ export function makeListRequest(request: ListRequest): Promise<ListResponse> {
       }),
     ),
   );
+}
+
+export async function getAllAdverts(request: ListRequest): Promise<Advert[]> {
+  const resFirstPage = await makeListRequest(request);
+  let adverts = resFirstPage.adverts;
+
+  const { page, pageCount } = resFirstPage;
+  await wait.sleep(config.waitBetweenRequests);
+
+  for (let currentPage = page + 1; currentPage <= pageCount; currentPage++) {
+    const res = await makeListRequest({ ...request, page: currentPage });
+    adverts = adverts.concat(res.adverts);
+    await wait.sleep(config.waitBetweenRequests);
+  }
+
+  return adverts;
 }

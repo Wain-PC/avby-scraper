@@ -5,6 +5,8 @@ type TConfig = {
   baseURL: string;
   mongoURL: string;
   userAgent: string;
+  waitBetweenRequests: number;
+  requestsDir: string;
 };
 
 const config: TConfig = c;
