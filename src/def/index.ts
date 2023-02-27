@@ -6,7 +6,7 @@ type ListRequestProperty = {
   value: ListRequestPropertyValue;
 };
 
-type Price = {
+export type TPrice = {
   currency: string;
   amount: number;
 };
@@ -20,7 +20,7 @@ export enum EAdvertType {
   Cars = 'cars',
 }
 
-export type Advert = {
+export type TAdvert = {
   id: number;
   type: EAdvertType;
   description: string;
@@ -30,9 +30,9 @@ export type Advert = {
   };
   originalDaysOnSale: number;
   price: {
-    byn: Price;
-    usd: Price;
-    rub: Price;
+    byn: TPrice;
+    usd: TPrice;
+    rub: TPrice;
   };
   publicUrl: string;
   publishedAt: Date;
@@ -46,5 +46,17 @@ export type ListResponse = {
   count: number;
   page: number;
   pageCount: number;
-  adverts: Advert[];
+  adverts: TAdvert[];
+};
+
+export type TRequestName = string;
+
+export type TRequestResult = {
+  name: TRequestName;
+  adverts: TAdvert[];
+};
+
+export type TRequestFile = {
+  name: TRequestName;
+  listRequest: ListRequest;
 };

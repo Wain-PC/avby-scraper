@@ -1,4 +1,4 @@
-import { Advert, ListRequest, ListResponse } from '../def/index.js';
+import { TAdvert, ListRequest, ListResponse } from '../def/index.js';
 import { config } from '../utils/config.js';
 import { firstValueFrom, from, map, switchMap } from 'rxjs';
 import fetch from 'node-fetch';
@@ -29,7 +29,7 @@ export function makeListRequest(request: ListRequest): Promise<ListResponse> {
   );
 }
 
-export async function getAllAdverts(request: ListRequest): Promise<Advert[]> {
+export async function getAllAdverts(request: ListRequest): Promise<TAdvert[]> {
   const resFirstPage = await makeListRequest(request);
   let adverts = resFirstPage.adverts;
 

@@ -1,18 +1,21 @@
 import path from 'path';
 import { config } from './config.js';
 import { readdir, readFile } from 'fs/promises';
-import { ListRequest } from '../def/index.js';
+import { TRequestFile } from '../def/index.js';
 
-export async function getAllRequests(): Promise<ListRequest[]> {
+export async function getAllRequests(): Promise<TRequestFile[]> {
   const dir = path.resolve(config.requestsDir);
   const files = await readdir(dir);
-  const res: ListRequest[] = [];
+  const res: TRequestFile[] = [];
 
-  for (const file of files) {
-    const content = await readFile(path.resolve(dir, file), {
+  for (const name of files) {
+    const content = await readFile(path.resolve(dir, name), {
       encoding: 'utf8',
     });
-    res.push(JSON.parse(content));
+    res.push({
+      name,
+      listRequest: JSON.parse(content),
+    });
   }
 
   return res;

@@ -3,6 +3,6 @@
   "baseURL": "https://api.av.by",
   "mongoURL": "mongodb://127.0.0.1:27017",
   "userAgent": "Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.3 Mobile/15E148 Safari/604.1",
-  "waitBetweenRequests": 5000,
+  "waitBetweenRequests": 1000,
   "requestsDir": "./http"
 }
