@@ -1,5 +1,10 @@
 {
   "port": "PORT",
+  "userAgent": "USER_AGENT",
+  "mongoURL": "MONGO_URL",
   "telegramToken": "TELEGRAM_TOKEN",
-  "telegramChatId": "TELEGRAM_CHAT_ID"
+  "telegramChatId": "TELEGRAM_CHAT_ID",
+  "waitBetweenRequests": "WAIT_BETWEEN_REQUESTS",
+  "requestsDir": "REQUESTS_DIR",
+  "cron": "CRON"
 }
