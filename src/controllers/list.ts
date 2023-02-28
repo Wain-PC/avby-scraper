@@ -4,8 +4,11 @@ import { firstValueFrom, from, map, switchMap } from 'rxjs';
 import fetch from 'node-fetch';
 import wait from 'wait-promise';
 
-export function makeListRequest(request: ListRequest): Promise<ListResponse> {
-  console.log('Make request for page', request.page);
+export function makeListRequest(
+  request: ListRequest,
+  pageCount?: number,
+): Promise<ListResponse> {
+  console.log(`Make request for page ${request.page}/${pageCount ?? '?'}`);
 
   return firstValueFrom(
     from(
@@ -37,7 +40,10 @@ export async function getAllAdverts(request: ListRequest): Promise<TAdvert[]> {
   await wait.sleep(config.waitBetweenRequests);
 
   for (let currentPage = page + 1; currentPage <= pageCount; currentPage++) {
-    const res = await makeListRequest({ ...request, page: currentPage });
+    const res = await makeListRequest(
+      { ...request, page: currentPage },
+      pageCount,
+    );
     adverts = adverts.concat(res.adverts);
     await wait.sleep(config.waitBetweenRequests);
   }

@@ -6,7 +6,7 @@ type ListRequestProperty = {
   value: ListRequestPropertyValue;
 };
 
-export type TPrice = {
+export type TAdvertPrice = {
   currency: string;
   amount: number;
 };
@@ -20,6 +20,26 @@ export enum EAdvertType {
   Cars = 'cars',
 }
 
+export type TAdvertPhoto = {
+  id: number;
+  main?: boolean;
+  extrasmall: TAdvertPhotoSize;
+  small: TAdvertPhotoSize;
+  medium?: TAdvertPhotoSize;
+  big: TAdvertPhotoSize;
+};
+export type TAdvertPhotoSize = {
+  width: number;
+  height: number;
+  url: string;
+};
+
+export type TAdvertProperty = {
+  name: string;
+  value: string | number;
+  id: number;
+};
+
 export type TAdvert = {
   id: number;
   type: EAdvertType;
@@ -30,15 +50,17 @@ export type TAdvert = {
   };
   originalDaysOnSale: number;
   price: {
-    byn: TPrice;
-    usd: TPrice;
-    rub: TPrice;
+    byn: TAdvertPrice;
+    usd: TAdvertPrice;
+    rub: TAdvertPrice;
   };
   publicUrl: string;
   publishedAt: Date;
   refreshedAt: Date;
   renewedAt: Date;
   year: number;
+  photos: TAdvertPhoto[];
+  properties: TAdvertProperty[];
 };
 
 export type ListResponse = {

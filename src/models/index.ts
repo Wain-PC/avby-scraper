@@ -1,9 +1,37 @@
 import { model, Schema } from 'mongoose';
-import type { TPrice, TAdvert, TRequestResult } from '../def/index.js';
+import type {
+  TAdvert,
+  TAdvertPhoto,
+  TAdvertPhotoSize,
+  TAdvertPrice,
+  TAdvertProperty,
+  TRequestResult,
+} from '../def/index.js';
 
-const priceSchema = new Schema<TPrice>({
+const priceSchema = new Schema<TAdvertPrice>({
   currency: { type: String, required: true },
   amount: { type: Number, required: true },
+});
+
+const propertySchema = new Schema<TAdvertProperty>({
+  id: { type: Number, required: true },
+  name: { type: String, required: true },
+  value: { type: Schema.Types.Mixed, required: true },
+});
+
+const photoSizeSchema = new Schema<TAdvertPhotoSize>({
+  width: { type: Number, required: true },
+  height: { type: Number, required: true },
+  url: { type: String, required: true },
+});
+
+const photoSchema = new Schema<TAdvertPhoto>({
+  id: { type: Number, required: true },
+  main: { type: Boolean, required: true },
+  extrasmall: photoSizeSchema,
+  small: photoSizeSchema,
+  medium: photoSizeSchema,
+  big: photoSizeSchema,
 });
 
 const advertSchema = new Schema<TAdvert>({
@@ -25,6 +53,8 @@ const advertSchema = new Schema<TAdvert>({
   refreshedAt: { type: Date, required: true },
   renewedAt: { type: Date, required: true },
   year: { type: Number, required: true },
+  properties: [propertySchema],
+  photos: [photoSchema],
 });
 
 const requestSchema = new Schema<TRequestResult>({

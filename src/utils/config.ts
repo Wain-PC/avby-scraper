@@ -1,4 +1,4 @@
-import c from 'config';
+import * as dotenv from 'dotenv';
 
 type TConfig = {
   port: number;
@@ -7,8 +7,11 @@ type TConfig = {
   userAgent: string;
   waitBetweenRequests: number;
   requestsDir: string;
+  telegramToken: string;
+  telegramChatId: string;
 };
 
-const config: TConfig = c;
+dotenv.config();
+const config = (await import('config')).default as unknown as TConfig;
 
 export { config };

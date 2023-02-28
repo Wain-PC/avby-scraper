@@ -1,3 +1,5 @@
 {
-  "port": "PORT"
+  "port": "PORT",
+  "telegramToken": "TELEGRAM_TOKEN",
+  "telegramChatId": "TELEGRAM_CHAT_ID"
 }

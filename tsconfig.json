@@ -3,7 +3,7 @@
     "esModuleInterop": true,
     "target": "ES2022",
     "module": "Node16",
-    "lib": ["ES2022", "esnext.asynciterable", "DOM"],
+    "lib": ["esnext", "esnext.asynciterable", "DOM"],
     "moduleResolution": "Node16",
     "rootDir": ".",
     "outDir": "build",
