@@ -6,8 +6,6 @@ import { processCycle } from './controllers/index.js';
 
 console.debug('Config:', config);
 
-const job = new CronJob(config.cron, processCycle);
-
 await mongoose.connect(config.mongoURL);
-console.debug('MongoDB Connected');
-job.start();
+console.debug('MongoDB Connected, starting Cron');
+new CronJob(config.cron, processCycle, null, true, undefined, undefined, true);
