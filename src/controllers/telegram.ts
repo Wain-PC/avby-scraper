@@ -59,17 +59,6 @@ ${advert.description}`;
 }
 
 export async function sendSoldAdvertToTelegram(advert: TAdvert): Promise<void> {
-  const media: InputMedia[] = advert.photos.slice(0, 10).map((photo) => {
-    return {
-      type: 'photo',
-      media: photo.big.url,
-    };
-  });
-
-  await bot.sendMediaGroup(config.telegramChatId, media, {
-    disable_notification: true,
-  });
-
   const text = `
 *[SOLD] ${getAdvertProperty(advert, 'brand')} ${getAdvertProperty(
     advert,
