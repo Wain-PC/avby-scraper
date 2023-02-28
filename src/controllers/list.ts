@@ -37,15 +37,14 @@ export async function getAllAdverts(request: ListRequest): Promise<TAdvert[]> {
   let adverts = resFirstPage.adverts;
 
   const { page, pageCount } = resFirstPage;
-  await wait.sleep(config.waitBetweenRequests);
 
   for (let currentPage = page + 1; currentPage <= pageCount; currentPage++) {
+    await wait.sleep(config.waitBetweenRequests);
     const res = await makeListRequest(
       { ...request, page: currentPage },
       pageCount,
     );
     adverts = adverts.concat(res.adverts);
-    await wait.sleep(config.waitBetweenRequests);
   }
 
   return adverts;

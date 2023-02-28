@@ -9,6 +9,7 @@ type TConfig = {
   requestsDir: string;
   telegramToken: string;
   telegramChatId: string;
+  cron: string;
 };
 
 dotenv.config();

@@ -6,5 +6,6 @@
   "waitBetweenRequests": 1000,
   "requestsDir": "./http",
   "telegramToken": "",
-  "telegramChatId": ""
+  "telegramChatId": "",
+  "cron": "*/10 * * * *"
 }
