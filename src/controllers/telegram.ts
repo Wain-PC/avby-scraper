@@ -48,6 +48,7 @@ export async function sendNewAdvertToTelegram(advert: TAdvert): Promise<void> {
 *${getAdvertProperty(advert, 'brand')} ${getAdvertProperty(advert, 'model')}, ${
     advert.year
   } г., пробег ${getAdvertProperty(advert, 'mileage_km')} км,
+${advert.price.usd.amount} ${advert.price.usd.currency}
 ${advert.locationName}
 ${advert.publicUrl}*
 ${advert.description}`;
@@ -64,6 +65,7 @@ export async function sendSoldAdvertToTelegram(advert: TAdvert): Promise<void> {
     advert,
     'model',
   )}, ${advert.year} г., пробег ${getAdvertProperty(advert, 'mileage_km')} км,
+${advert.price.usd.amount} ${advert.price.usd.currency}
 ${advert.locationName}
 ${advert.publicUrl}*`;
 
