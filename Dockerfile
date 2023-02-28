@@ -9,6 +9,6 @@ FROM node:19
 WORKDIR /app
 COPY --from=builder /build/package*.json ./
 RUN npm ci --omit=dev
-COPY --from=builder /build/build/ ./
+COPY --from=builder /build/build/ /build/.env ./
 EXPOSE 8080
 CMD [ "node", "src/index.js" ]
