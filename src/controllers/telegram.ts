@@ -19,8 +19,6 @@ bot.onText(/\/start/, async (msg) => {
   );
 });
 
-console.log(config);
-
 export async function sendNewRequestRegistered(
   req: TRequestResult,
 ): Promise<void> {

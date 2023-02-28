@@ -4,6 +4,8 @@ import mongoose from 'mongoose';
 import { CronJob } from 'cron';
 import { processCycle } from './controllers/index.js';
 
+console.debug('Config:', config);
+
 const job = new CronJob(
   config.cron,
   processCycle,
