@@ -1,7 +1,7 @@
-import { TAdvert, TAdvertProperty } from '../def/index.js';
+import { TAdvertProperty, TAvByAdvert } from './def.js';
 
 export function getAdvertProperty(
-  advert: TAdvert,
+  advert: TAvByAdvert,
   name: TAdvertProperty['name'],
 ): TAdvertProperty['value'] | null {
   const prop = advert.properties.find((prop) => prop.name === name);

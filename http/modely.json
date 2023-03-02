@@ -1,32 +1,35 @@
 {
-  "page": 1,
-  "properties": [
-    {
-      "name": "brands",
-      "property": 6,
-      "value": [
-        [
-          {
-            "name": "brand",
-            "value": 2521
-          },
-          {
-            "name": "model",
-            "value": 6011
-          }
+  "module": "AvBy",
+  "request": {
+    "properties": [
+      {
+        "name": "brands",
+        "property": 6,
+        "value": [
+          [
+            {
+              "name": "brand",
+              "value": 2521
+            },
+            {
+              "name": "model",
+              "value": 6011
+            }
+          ]
         ]
-      ]
-    },
-    {
-      "name": "year",
-      "value": {
-        "max": null,
-        "min": 2020
+      },
+      {
+        "name": "year",
+        "value": {
+          "max": null,
+          "min": 2020
+        }
+      },
+      {
+        "name": "price_currency",
+        "value": 2
       }
-    },
-    {
-      "name": "price_currency",
-      "value": 2
-    }
-  ]
+    ]
+  }
+
 }

@@ -1,11 +1,18 @@
-import { Request } from '../models/index.js';
-import { TRequestName, TRequestResult } from '../def/index.js';
+import { Item } from '../models/index.js';
+import { EModuleIds, TScraperResponse } from '../def/module.js';
+import { TDatabaseItem, TRequestName } from '../def/index.js';
 
 export const loadRequestFromDB = async (
   name: TRequestName,
-): Promise<TRequestResult | null> => {
-  return Request.findOne({ name });
+): Promise<TDatabaseItem | null> => {
+  return Item.findOne({ name });
 };
-export const saveRequestToDB = async (req: TRequestResult): Promise<void> => {
-  await Request.replaceOne({ name: req.name }, req, { upsert: true });
+export const saveRequestToDB = async (
+  id: EModuleIds,
+  name: TRequestName,
+  res: TScraperResponse,
+): Promise<void> => {
+  const item: TDatabaseItem = { id, name, items: res.items };
+
+  await Item.replaceOne({ id, name }, item, { upsert: true });
 };

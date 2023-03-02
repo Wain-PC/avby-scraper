@@ -1,7 +1,7 @@
 import TelegramBot, { InputMedia } from 'node-telegram-bot-api';
 import { config } from '../utils/config.js';
-import { TAdvert, TRequestResult } from '../def/index.js';
-import { getAdvertProperty } from '../utils/getAdvertProperty.js';
+import { EModuleIds, TScrapedItem, TScraperResponse } from '../def/module.js';
+import { TRequestName } from '../def/index.js';
 
 const bot = new TelegramBot(config.telegramToken, { polling: true });
 
@@ -20,21 +20,25 @@ bot.onText(/\/start/, async (msg) => {
 });
 
 export async function sendNewRequestRegistered(
-  req: TRequestResult,
+  id: EModuleIds,
+  name: TRequestName,
+  res: TScraperResponse,
 ): Promise<void> {
-  const text = `Зарегистрирован новый запрос *${req.name}*.
-Первым поиском найдено ${req.adverts.length} объявлений`;
+  const text = `Зарегистрирован новый запрос *[${id}]${name}*.
+Первым поиском найдено ${res.items.length} объявлений`;
 
   await bot.sendMessage(config.telegramChatId, text, {
     parse_mode: 'Markdown',
   });
 }
 
-export async function sendNewAdvertToTelegram(advert: TAdvert): Promise<void> {
-  const media: InputMedia[] = advert.photos.slice(0, 10).map((photo) => {
+export async function sendNewAdvertToTelegram(
+  advert: TScrapedItem,
+): Promise<void> {
+  const media: InputMedia[] = advert.photos.slice(0, 10).map((media) => {
     return {
       type: 'photo',
-      media: photo.big.url,
+      media,
     };
   });
 
@@ -43,12 +47,10 @@ export async function sendNewAdvertToTelegram(advert: TAdvert): Promise<void> {
   });
 
   const text = `
-*${getAdvertProperty(advert, 'brand')} ${getAdvertProperty(advert, 'model')}, ${
-    advert.year
-  } г., пробег ${getAdvertProperty(advert, 'mileage_km')} км,
-${advert.price.usd.amount} ${advert.price.usd.currency}
-${advert.locationName}
-${advert.publicUrl}*
+*${advert.title}, ${advert.year} г., пробег ${advert.mileage} км.,
+${advert.price} ${advert.currency}
+${advert.location}
+${advert.url}*
 ${advert.description}`;
 
   await bot.sendMessage(config.telegramChatId, text, {
@@ -57,15 +59,14 @@ ${advert.description}`;
   });
 }
 
-export async function sendSoldAdvertToTelegram(advert: TAdvert): Promise<void> {
+export async function sendSoldAdvertToTelegram(
+  advert: TScrapedItem,
+): Promise<void> {
   const text = `
-*[SOLD] ${getAdvertProperty(advert, 'brand')} ${getAdvertProperty(
-    advert,
-    'model',
-  )}, ${advert.year} г., пробег ${getAdvertProperty(advert, 'mileage_km')} км,
-${advert.price.usd.amount} ${advert.price.usd.currency}
-${advert.locationName}
-${advert.publicUrl}*`;
+*[SOLD] ${advert.title}, ${advert.year} г., пробег ${advert.mileage} км,
+${advert.price} ${advert.currency}
+${advert.location}
+${advert.url}*`;
 
   await bot.sendMessage(config.telegramChatId, text, {
     parse_mode: 'Markdown',

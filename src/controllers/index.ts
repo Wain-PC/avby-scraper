@@ -1,6 +1,4 @@
 import { getAllRequests } from '../utils/requests.js';
-import { getAllAdverts } from './list.js';
-import { TRequestResult } from '../def/index.js';
 import { loadRequestFromDB, saveRequestToDB } from './save.js';
 import { differenceBy, isNil } from 'lodash-es';
 import {
@@ -8,53 +6,74 @@ import {
   sendNewRequestRegistered,
   sendSoldAdvertToTelegram,
 } from './telegram.js';
+import { EModuleIds, TScraperModule } from '../def/module.js';
+import { AvByModule } from '../modules/avby/index.js';
 
 export async function processCycle(): Promise<void> {
   console.debug(`Starting process cycle`);
   const requests = await getAllRequests();
   console.debug(`Found ${requests.length} requests in line`);
 
-  for (const { listRequest, name } of requests) {
-    console.debug(`[${name}] Processing request`);
-    const adverts = await getAllAdverts(listRequest);
-    const requestFromSite: TRequestResult = {
-      name,
-      adverts,
-    };
-    console.debug(`[${name}] Got ${adverts.length} adverts`);
-
-    const requestFromDB = await loadRequestFromDB(name);
-
-    if (isNil(requestFromDB)) {
-      console.debug(
-        `[${name}] DB Document not found, sending Telegram notification`,
-      );
-      await sendNewRequestRegistered(requestFromSite);
-    } else {
-      const soldItems = differenceBy(
-        requestFromDB.adverts,
-        requestFromSite.adverts,
-        'id',
-      );
-
-      console.debug(`[${name}] Found ${soldItems.length} sold items`);
-      for (const item of soldItems) {
-        await sendSoldAdvertToTelegram(item);
-      }
-
-      const addedItems = differenceBy(
-        requestFromSite.adverts,
-        requestFromDB.adverts,
-        'id',
-      );
-
-      console.debug(`[${name}] Found ${soldItems.length} new items`);
-      for (const item of addedItems) {
-        await sendNewAdvertToTelegram(item);
-      }
+  for (const { moduleId, request, name } of requests) {
+    console.debug(`[${moduleId}][${name}] Processing request`);
+    if (moduleId === undefined) {
+      console.error(`Incorrect request ${name} (moduleId is undefined)`);
+      continue;
     }
 
-    await saveRequestToDB(requestFromSite);
-    console.log('saved successfully');
+    const module = selectModuleById(moduleId);
+    if (module === undefined) {
+      console.error(`Incorrect request ${name} (module ${moduleId} not found)`);
+      continue;
+    }
+
+    try {
+      const siteItem = await module.getItems(request);
+      console.debug(
+        `[${moduleId}][${name}] Got ${siteItem.items.length} adverts`,
+      );
+
+      const dbItem = await loadRequestFromDB(name);
+      await saveRequestToDB(moduleId, name, siteItem);
+      console.log('[${moduleId}][${name}] DB Document upserted');
+
+      if (isNil(dbItem)) {
+        console.debug(
+          `[${moduleId}][${name}] DB Document not found, sending Telegram notification`,
+        );
+        await sendNewRequestRegistered(moduleId, name, siteItem);
+      } else {
+        const soldItems = differenceBy(dbItem.items, siteItem.items, 'id');
+
+        console.debug(
+          `[${moduleId}][${name}] Found ${soldItems.length} sold items`,
+        );
+        for (const item of soldItems) {
+          await sendSoldAdvertToTelegram(item);
+        }
+
+        const addedItems = differenceBy(siteItem.items, dbItem.items, 'id');
+
+        console.debug(
+          `[${moduleId}][${name}] Found ${soldItems.length} new items`,
+        );
+        for (const item of addedItems) {
+          await sendNewAdvertToTelegram(item);
+        }
+      }
+    } catch (e) {
+      console.error(`${moduleId}][${name}] Failed to process request:`, e);
+    }
+  }
+}
+
+function selectModuleById(id: EModuleIds): TScraperModule | undefined {
+  switch (id) {
+    case EModuleIds.AvBy: {
+      return AvByModule;
+    }
+    default: {
+      return undefined;
+    }
   }
 }

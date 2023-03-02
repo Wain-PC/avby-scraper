@@ -12,9 +12,13 @@ export async function getAllRequests(): Promise<TRequestFile[]> {
     const content = await readFile(path.resolve(dir, name), {
       encoding: 'utf8',
     });
+
+    const obj = JSON.parse(content);
+
     res.push({
       name,
-      listRequest: JSON.parse(content),
+      moduleId: obj.module,
+      request: obj.request,
     });
   }
 
