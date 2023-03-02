@@ -24,7 +24,7 @@ export async function getInternalItems(
   while (true) {
     try {
       if (page > 1) {
-        await wait.sleep(config.waitBetweenRequests);
+        await wait.sleep(config.waitBetweenRequestsAvito);
       }
       const response = await makeRequest(request, page, lastStamp, pageId);
       if (response.status !== 'ok') {
@@ -89,18 +89,23 @@ function makeRequest(
   lastStamp: number,
   pageId: string | undefined,
 ): Promise<TAvitoResponse> {
-  const query = qs.stringify({
+  const queryObj = {
     ...qs.parse(request),
     page,
     lastStamp,
     pageId,
-  });
+  };
+  const query = qs.stringify(queryObj);
+  const url = `${config.baseURLAvito}/api/11/items/?${query}`;
+
+  console.log(`[${EModuleIds.Avito}] Making request to ${url}, query:`, query);
 
   return firstValueFrom(
     from(
-      fetch(`${config.baseURLAvito}/api/11/items/?${query}`, {
+      fetch(url, {
         method: 'GET',
         headers: {
+          // TODO: Add `f` (and, probably, other) cookie(s) from the original request
           referer: 'https://m.avito.ru/moskva_i_mo/avtomobili/s_probegom',
           'content-type': 'application/json;charset=utf-8',
           accept: 'application/json',

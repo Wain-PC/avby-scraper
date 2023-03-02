@@ -36,7 +36,7 @@ export async function processCycle(): Promise<void> {
 
       const dbItem = await loadRequestFromDB(name);
       await saveRequestToDB(moduleId, name, siteItem);
-      console.log('[${moduleId}][${name}] DB Document upserted');
+      console.log(`[${moduleId}][${name}] DB Document upserted`);
 
       if (isNil(dbItem)) {
         console.debug(

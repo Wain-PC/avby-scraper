@@ -7,6 +7,7 @@ type TConfig = {
   mongoURL: string;
   userAgent: string;
   waitBetweenRequests: number;
+  waitBetweenRequestsAvito: number;
   requestsDir: string;
   telegramToken: string;
   telegramChatId: string;
