@@ -8,6 +8,7 @@ import {
 } from './telegram.js';
 import { EModuleIds, TScraperModule } from '../def/module.js';
 import { AvByModule } from '../modules/avby/index.js';
+import { AvitoModule } from '../modules/avito/index.js';
 
 export async function processCycle(): Promise<void> {
   console.debug(`Starting process cycle`);
@@ -49,7 +50,7 @@ export async function processCycle(): Promise<void> {
           `[${moduleId}][${name}] Found ${soldItems.length} sold items`,
         );
         for (const item of soldItems) {
-          await sendSoldAdvertToTelegram(item);
+          await sendSoldAdvertToTelegram(module.getTelegramSoldMessage(item));
         }
 
         const addedItems = differenceBy(siteItem.items, dbItem.items, 'id');
@@ -58,7 +59,10 @@ export async function processCycle(): Promise<void> {
           `[${moduleId}][${name}] Found ${soldItems.length} new items`,
         );
         for (const item of addedItems) {
-          await sendNewAdvertToTelegram(item);
+          await sendNewAdvertToTelegram(
+            item,
+            module.getTelegramAddedMessage(item),
+          );
         }
       }
     } catch (e) {
@@ -71,6 +75,9 @@ function selectModuleById(id: EModuleIds): TScraperModule | undefined {
   switch (id) {
     case EModuleIds.AvBy: {
       return AvByModule;
+    }
+    case EModuleIds.Avito: {
+      return AvitoModule;
     }
     default: {
       return undefined;

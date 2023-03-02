@@ -34,6 +34,7 @@ export async function sendNewRequestRegistered(
 
 export async function sendNewAdvertToTelegram(
   advert: TScrapedItem,
+  text: string,
 ): Promise<void> {
   const media: InputMedia[] = advert.photos.slice(0, 10).map((media) => {
     return {
@@ -42,16 +43,11 @@ export async function sendNewAdvertToTelegram(
     };
   });
 
-  await bot.sendMediaGroup(config.telegramChatId, media, {
-    disable_notification: true,
-  });
-
-  const text = `
-*${advert.title}, ${advert.year} г., пробег ${advert.mileage} км.,
-${advert.price} ${advert.currency}
-${advert.location}
-${advert.url}*
-${advert.description}`;
+  if (media.length > 0) {
+    await bot.sendMediaGroup(config.telegramChatId, media, {
+      disable_notification: true,
+    });
+  }
 
   await bot.sendMessage(config.telegramChatId, text, {
     parse_mode: 'Markdown',
@@ -59,15 +55,7 @@ ${advert.description}`;
   });
 }
 
-export async function sendSoldAdvertToTelegram(
-  advert: TScrapedItem,
-): Promise<void> {
-  const text = `
-*[SOLD] ${advert.title}, ${advert.year} г., пробег ${advert.mileage} км,
-${advert.price} ${advert.currency}
-${advert.location}
-${advert.url}*`;
-
+export async function sendSoldAdvertToTelegram(text: string): Promise<void> {
   await bot.sendMessage(config.telegramChatId, text, {
     parse_mode: 'Markdown',
     disable_web_page_preview: true,

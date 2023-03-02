@@ -2,7 +2,8 @@ import * as dotenv from 'dotenv';
 
 type TConfig = {
   port: number;
-  baseURL: string;
+  baseURLAvBy: string;
+  baseURLAvito: string;
   mongoURL: string;
   userAgent: string;
   waitBetweenRequests: number;

@@ -1,6 +1,7 @@
 export enum EModuleIds {
   AvBy = 'AvBy',
   AutoRu = 'AutoRu',
+  Avito = 'Avito',
 }
 
 export type TScraperId = EModuleIds;
@@ -8,8 +9,8 @@ export type TScraperId = EModuleIds;
 export type TScrapedItem = {
   id: number;
   title: string;
-  year: number;
-  mileage: number;
+  year?: number;
+  mileage?: number;
   location: string;
   price: number;
   currency?: string;
@@ -25,4 +26,6 @@ export type TScraperResponse = {
 export type TScraperModule = {
   id: TScraperId;
   getItems: (request: any) => Promise<TScraperResponse>;
+  getTelegramAddedMessage: (item: TScrapedItem) => string;
+  getTelegramSoldMessage: (item: TScrapedItem) => string;
 };

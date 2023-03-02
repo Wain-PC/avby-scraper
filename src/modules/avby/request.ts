@@ -14,7 +14,7 @@ export function makeListRequest(
 
   return firstValueFrom(
     from(
-      fetch(`${config.baseURL}/offer-types/cars/filters/main/apply`, {
+      fetch(`${config.baseURLAvBy}/offer-types/cars/filters/main/apply`, {
         method: 'POST',
         body: JSON.stringify(request),
         headers: {
